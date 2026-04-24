@@ -115,7 +115,7 @@ export async function handleSearch(args: SearchArgs): Promise<HandlerResult & { 
 
   const mapped = limited.map(p => ({
     name: p.name,
-    price: p.retail_price.price,
+    price: p.retail_price?.price ?? 0,
     unit_price: p.unit_price ? `£${p.unit_price.price}/${p.unit_price.measure}` : undefined,
     product_uid: p.product_uid,
     in_stock: p.in_stock,
@@ -123,7 +123,7 @@ export async function handleSearch(args: SearchArgs): Promise<HandlerResult & { 
   }));
 
   const lines = mapped.map((p, i) => {
-    const parts = [`£${p.price.toFixed(2)}`];
+    const parts = [p.price ? `£${p.price.toFixed(2)}` : 'Price N/A'];
     if (p.unit_price) parts.push(p.unit_price);
     if (p.rating) parts.push(`⭐ ${p.rating}`);
     parts.push(`ID: ${p.product_uid}`);
